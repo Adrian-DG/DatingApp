@@ -24,12 +24,23 @@ namespace API
             this.Configuration = configuration;
 
         }
+
+        private string CustomPolicy = "_customPolicy";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<API.Data.DataContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddCors(options => options.AddPolicy(CustomPolicy, builder => {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.WithOrigins("https://localhost:4200");
+            }));
+
+            services.AddDbContext<API.Data.DataContext>(options => {
+                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -50,6 +61,8 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(CustomPolicy);
 
             app.UseAuthorization();
 

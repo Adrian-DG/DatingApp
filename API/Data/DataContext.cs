@@ -10,6 +10,13 @@ namespace API.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+            modelBuilder.Entity<AppUser>()
+            .HasData(
+                new AppUser { Id = 1, UserName = "Adrian" },
+                new AppUser { Id = 2, UserName = "victor" }
+            );
+        }
         public DbSet<AppUser> Users {get; set;}
     }
 }

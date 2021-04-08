@@ -1,0 +1,7 @@
+<h1 class="text-center">Dating App</h1>
+<ul>
+	<li *ngFor="let user of users">
+		{{ user | json }}
+	</li>
+</ul>
+<router-outlet></router-outlet>
