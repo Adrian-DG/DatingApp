@@ -1,0 +1,23 @@
+<div id="home" class="container">
+	<div *ngIf="!registerMode" class="text-center">
+		<h1>Find your match</h1>
+		<p>The only thing you need is to sign up!</p>
+		<div class="container">
+			<button (click)="registerToggle()" class="btn btn-primary">
+				Register
+			</button>
+			<button class="btn btn-info">Learn more</button>
+		</div>
+	</div>
+
+	<!-- register form -->
+	<div *ngIf="registerMode" class="container">
+		<div class="row justify-content-center">
+			<div class="col-4">
+				<app-register
+					(cancelRegister)="changeRegisterMode($event)"
+				></app-register>
+			</div>
+		</div>
+	</div>
+</div>

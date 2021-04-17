@@ -1,0 +1,14 @@
+.form-control,
+.btn {
+	margin-left: 0.5em;
+}
+
+.collapse {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+.dropdown-toggle {
+	cursor: pointer;
+}
