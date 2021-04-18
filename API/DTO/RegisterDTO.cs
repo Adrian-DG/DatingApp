@@ -9,6 +9,7 @@ namespace API.DTO
         public string Username { get; set; }
         [Required]
         [MinLength(8)]
+        [MaxLength(10)]
         public string Password { get; set; }
     }
 }
