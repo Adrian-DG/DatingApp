@@ -12,3 +12,9 @@
 .dropdown-toggle {
 	cursor: pointer;
 }
+
+#basic-link {
+	color: white;
+	opacity: 0.6;
+	margin-left: 0.5em;
+}

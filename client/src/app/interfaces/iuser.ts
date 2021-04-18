@@ -1,4 +1,4 @@
 export interface IUser {
-	userName: string;
+	username: string;
 	token: string;
 }
