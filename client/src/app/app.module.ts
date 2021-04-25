@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AppRoutingModule } from "./app-routing.module";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 
@@ -16,6 +16,8 @@ import { MenbersDetailsComponent } from "./components/menbers-details/menbers-de
 import { ListComponent } from "./components/list/list.component";
 import { MessagesComponent } from "./components/messages/messages.component";
 import { SharedModule } from "./modules/shared.module";
+import { MemberCardComponent } from "./components/member-card/member-card/member-card.component";
+import { JwtInterceptor } from "./interceptors/jwt.interceptor";
 
 @NgModule({
 	declarations: [
@@ -27,6 +29,7 @@ import { SharedModule } from "./modules/shared.module";
 		MenbersDetailsComponent,
 		ListComponent,
 		MessagesComponent,
+		MemberCardComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -36,7 +39,9 @@ import { SharedModule } from "./modules/shared.module";
 		FormsModule,
 		SharedModule,
 	],
-	providers: [],
+	providers: [
+		{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+	],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

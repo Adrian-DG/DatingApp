@@ -1,1 +1,84 @@
-<p>menbers-details works!</p>
+<div class="row">
+	<!-- card -->
+	<div class="col-4">
+		<div class="card" style="width: 18rem">
+			<img
+				src="{{ member?.photoUrl || './assets/user.png' }}"
+				class="card-img-top"
+				alt="..."
+			/>
+			<div class="card-body">
+				<div class="header">
+					<h5 class="card-title">
+						{{ member?.username | titlecase }}
+					</h5>
+					<span class="age">{{ member?.age }} years</span>
+				</div>
+
+				<div class="card-text">
+					<p class="text-muted">
+						{{ member?.gender }}
+						<span *ngIf="member?.gender == 'male'; else elseBlock"
+							><i class="fa fa-mars-stroke"></i
+						></span>
+						<ng-template #elseBlock>
+							<span><i class="fa fa-venus"></i></span>
+						</ng-template>
+					</p>
+				</div>
+
+				<div class="card-text">
+					<div id="info">
+						<small class="text-muted">
+							<i class="fa fa-map-marker"></i>
+							{{ member?.city | titlecase }}
+						</small>
+						<small class="text-muted">{{
+							member?.lastActive | date
+						}}</small>
+					</div>
+				</div>
+				<div class="options">
+					<div>
+						<button class="btn btn-block btn-primary">
+							<span><i class="fa fa-heart"></i></span>
+							Like
+						</button>
+					</div>
+					<div>
+						<button class="btn btn-block btn-success">
+							<span><i class="fa fa-comments-o"></i></span>
+							Message
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- tabs -->
+	<div id="info-tab" class="col-8">
+		<tabset class="member-tabset">
+			<tab class="tabs" heading="About" id="tab1">
+				<h5>About {{ member?.username }}</h5>
+				<p>{{ member?.introduction | titlecase }}</p>
+			</tab>
+			<tab class="tabs" heading="Interest">
+				<h5>Looking For</h5>
+				<p>{{ member?.lookingFor | titlecase }}</p>
+			</tab>
+			<tab class="tabs" heading="Photos">
+				<ngx-gallery
+					*ngIf="
+						galleryImages != undefined &&
+						galleryOptions != undefined
+					"
+					[options]="galleryOptions"
+					[images]="galleryImages"
+					class="ngx-gallery"
+				></ngx-gallery>
+			</tab>
+			<tab class="tabs" heading="Messages"></tab>
+		</tabset>
+	</div>
+</div>
