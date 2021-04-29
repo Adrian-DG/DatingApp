@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using API.Interfaces;
 using API.DTO;
 using AutoMapper;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -34,6 +35,20 @@ namespace API.Controllers
         {
             return await _userRepository.GetMemberAsync(username);
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateUser(MemberUpdateDTO updateDTO) 
+        {
+            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userRepository.GetUserByUsername(username);
+
+            _mapper.Map(updateDTO, user);
+            _userRepository.UpdateUser(user);
+
+            if(await _userRepository.SaveAllAsync()) return NoContent();
+
+            return BadRequest();
+        } 
 
 
     }

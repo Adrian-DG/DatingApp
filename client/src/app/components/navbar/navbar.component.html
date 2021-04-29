@@ -40,9 +40,11 @@
 					role="menu"
 					aria-labelledby="basic-link"
 				>
-					<li class="dropdown-item">Edit Profile</li>
+					<a routerLink="/member/edit" class="dropdown-item"
+						>Edit Profile</a
+					>
 					<li class="divider dropdown-divider"></li>
-					<li class="dropdown-item" (click)="Logout()">logout</li>
+					<a class="dropdown-item" (click)="Logout()">logout</a>
 				</ul>
 			</ng-container>
 		</div>

@@ -3,7 +3,7 @@
 	<hr />
 	<div class="row">
 		<div
-			*ngFor="let member of members; index as i"
+			*ngFor="let member of members$ | async; index as i"
 			class="col-sm-8 col-md-4 col-lg-3"
 		>
 			<app-member-card [memberObject]="member"></app-member-card>

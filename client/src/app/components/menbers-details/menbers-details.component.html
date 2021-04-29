@@ -33,9 +33,9 @@
 							<i class="fa fa-map-marker"></i>
 							{{ member?.city | titlecase }}
 						</small>
-						<small class="text-muted">{{
-							member?.lastActive | date
-						}}</small>
+						<small class="text-muted"
+							>last active{{ member?.lastActive | date }}</small
+						>
 					</div>
 				</div>
 				<div class="options">

@@ -20,29 +20,18 @@ namespace API.Data
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<AppUser>> GetUsersAsync()
+        public async Task<bool> SaveAllAsync()
         {
-            return await _context.Users
-                .Include(p => p.Photos) // Enables us to get Photos relation, But create a cycle
-                .ToListAsync();
-        }
-
-        public async Task<AppUser> GetUserByIdAsync(int id)
-        {
-            return await _context.Users.FindAsync(id);
+        return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<AppUser> GetUserByUsername(string username)
         {
             return await _context.Users
-                .Include(p => p.Photos)
-                .SingleOrDefaultAsync(x => x.UserName == username);
+                .Where(x => x.UserName == username)
+                .SingleOrDefaultAsync();
         }
 
-        public async Task<bool> SaveAllAsync()
-        {
-            return await _context.SaveChangesAsync() > 0;
-        }
 
         public void UpdateUser(AppUser user)
         {

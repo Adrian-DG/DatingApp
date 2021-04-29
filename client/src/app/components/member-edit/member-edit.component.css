@@ -1,0 +1,22 @@
+:root {
+	--border-red: 1px solid red;
+	--background-row: gainsboro;
+}
+
+.container {
+	margin-top: 2em;
+}
+
+.header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.card-title {
+	font-weight: 500;
+}
+
+.form-control {
+	margin: 0.5em auto 1em auto;
+}

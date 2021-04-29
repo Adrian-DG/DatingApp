@@ -17,6 +17,9 @@ namespace API.Helpers
                 .ForMember(dest => dest.KnowAs, opt => opt.MapFrom(src => src.KnowAs));
 
             CreateMap<Photo, PhotoDTO>();
+
+            CreateMap<MemberUpdateDTO, AppUser>();
+
         }
     }
 }
