@@ -64,23 +64,18 @@ namespace API.Controllers
 
             if(result.Error != null) return BadRequest(result.Error.Message);
 
-            var photo = new Photo 
+            Photo photo = new Photo 
             {
                 Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId
+                PublicId = result.PublicId,
+                IsMain = (user.Photos.Count == 0) ? true : false
             };
-
-            if(user.Photos.Count == 0)
-            {
-                photo.IsMain = true;
-            }
 
             user.Photos.Add(photo);
 
-            if(await _userRepository.SaveAllAsync())
-                return _mapper.Map<PhotoDTO>(photo);
-
-            return BadRequest("Problem adding photo");
+            return await _userRepository.SaveAllAsync() 
+                   ? _mapper.Map<PhotoDTO>(photo)
+                   : BadRequest("Problem adding photo");        
 
         }
 
