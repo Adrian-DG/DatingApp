@@ -57,25 +57,29 @@ namespace API.Controllers
 
 
         [HttpPost("add-photo")]
-        public async Task<ActionResult<PhotoDTO>> AddPhoto(IFormFile file) 
+        public async Task<ActionResult<PhotoDTO>> AddPhoto(IFormFile file)
         {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             var result = await _photoService.AddPhotoAsync(file);
 
-            if(result.Error != null) return BadRequest(result.Error.Message);
-
-            Photo photo = new Photo 
+            if (result.Error == null)
             {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId,
-                IsMain = (user.Photos.Count == 0) ? true : false
-            };
+                     Photo photo = new Photo();
 
-            user.Photos.Add(photo);
+                    photo.Url = result.SecureUrl.AbsoluteUri;
+                    photo.PublicId = result.PublicId;
+                   
+                   if(user.Photos.Count == 0) {
+                       photo.IsMain = true;
+                   }
+                
 
-            return await _userRepository.SaveAllAsync() 
-                   ? _mapper.Map<PhotoDTO>(photo)
-                   : BadRequest("Problem adding photo");        
+                user.Photos.Add(photo);
+
+                return await _userRepository.SaveAllAsync() ? _mapper.Map<PhotoDTO>(photo) : BadRequest("Problems uploading photo");
+            }
+
+            return BadRequest(result.Error.Message);
 
         }
 

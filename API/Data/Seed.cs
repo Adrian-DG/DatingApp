@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
 using API.Entities;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -16,11 +16,12 @@ namespace API.Data
             if ( await context.Users.AnyAsync()) return;
 
             var userData = await File.ReadAllTextAsync("Data/UserSeedData.json"); // read data as string
-            var users = JsonSerializer.Deserialize<List<AppUser>>(userData); // turn json => AppUser Object 
+            var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);  // turn json => AppUser Object 
 
             // This part encrypt the password 
             foreach( var user in users) 
             {
+
                 using var hmac = new HMACSHA512();
                 user.UserName = user.UserName.ToLower();
                 user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
