@@ -28,7 +28,7 @@ namespace API.Data
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
             return await _context.Users
-                .Where(x => x.UserName == username)
+                .Where(x => x.UserName == username.ToLower())
                 .SingleOrDefaultAsync();
         }
 
