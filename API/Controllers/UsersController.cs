@@ -39,7 +39,7 @@ namespace API.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{username}")]
+        [HttpGet("{username}", Name="GetUser")]
         public async Task<ActionResult<MemberDTO>> GetUserByName(string username)
         {
             return await _userRepository.GetMemberAsync(username);
@@ -76,7 +76,7 @@ namespace API.Controllers
             _context.Photos.Add(photo);
 
             return await _userRepository.SaveAllAsync() 
-                   ? _mapper.Map<PhotoDTO>(photo)
+                   ? CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDTO>(photo))
                    : BadRequest("Problem adding photo");        
 
         }

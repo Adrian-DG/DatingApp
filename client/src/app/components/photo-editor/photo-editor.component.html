@@ -1,0 +1,162 @@
+<div class="row">
+	<div class="col-md-2" *ngFor="let photo of photos">
+		<img [src]="photo.url" [alt]="photo.url" class="img-thumbnail" />
+		<div class="row p-1">
+			<div class="col-6">
+				<button class="btn btn-block btn-outline-dark btn-sm">
+					<i class="fa fa-star"></i>
+				</button>
+			</div>
+			<div class="col-6">
+				<button class="btn btn-block btn-danger btn-sm">
+					<i class="fa fa-trash"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!---------------- Photo uploader section ------------------------------------>
+
+<div class="row mt-3">
+	<div class="col-md-3">
+		<h3>Add Photos</h3>
+
+		<div
+			ng2FileDrop
+			[ngClass]="{ 'nv-file-over': hasBaseDropZoneOver }"
+			(fileOver)="fileOverBase($event)"
+			[uploader]="uploader"
+			class="card bg-faded p-3 text-center my-drop-zone"
+		>
+			<i class="fa fa-upload"></i>
+			Base drop zone
+		</div>
+
+		Multiple
+		<input type="file" ng2FileSelect [uploader]="uploader" multiple /><br />
+
+		Single
+		<input type="file" ng2FileSelect [uploader]="uploader" />
+	</div>
+
+	<div
+		class="col-md-9"
+		style="margin-bottom: 40px"
+		*ngIf="uploader?.queue?.length"
+	>
+		<h3>Upload queue</h3>
+		<p>Queue length: {{ uploader?.queue?.length }}</p>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th width="50%">Name</th>
+					<th>Size</th>
+					<th>Progress</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let item of uploader.queue">
+					<td>
+						<strong>{{ item?.file?.name }}</strong>
+					</td>
+					<td *ngIf="uploader.options.isHTML5" nowrap>
+						{{ item?.file?.size / 1024 / 1024 | number: '.2' }} MB
+					</td>
+					<td *ngIf="uploader.options.isHTML5">
+						<div class="progress" style="margin-bottom: 0">
+							<div
+								class="progress-bar"
+								role="progressbar"
+								[ngStyle]="{ width: item.progress + '%' }"
+							></div>
+						</div>
+					</td>
+					<td class="text-center">
+						<span *ngIf="item.isSuccess"
+							><i class="fa fa-thumbs-up"></i
+						></span>
+						<span *ngIf="item.isCancel"
+							><i class="fa fa-ban"></i
+						></span>
+						<span *ngIf="item.isError"
+							><i class="fa fa-trash"></i
+						></span>
+					</td>
+					<td nowrap>
+						<button
+							type="button"
+							class="btn btn-success btn-xs"
+							(click)="item.upload()"
+							[disabled]="
+								item.isReady ||
+								item.isUploading ||
+								item.isSuccess
+							"
+						>
+							<i class="fa fa-upload"></i>
+							Upload
+						</button>
+						<button
+							type="button"
+							class="btn btn-warning btn-xs"
+							(click)="item.cancel()"
+							[disabled]="!item.isUploading"
+						>
+							<i class="fa fa-ban"></i>
+							Cancel
+						</button>
+						<button
+							type="button"
+							class="btn btn-danger btn-xs"
+							(click)="item.remove()"
+						>
+							<i class="fa fa-trash"></i>
+							Remove
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div>
+			<div>
+				Queue progress:
+				<div class="progress">
+					<div
+						class="progress-bar"
+						role="progressbar"
+						[ngStyle]="{ width: uploader.progress + '%' }"
+					></div>
+				</div>
+			</div>
+			<button
+				type="button"
+				class="btn btn-success btn-s"
+				(click)="uploader.uploadAll()"
+				[disabled]="!uploader.getNotUploadedItems().length"
+			>
+				<span class="fa fa-upload"></span> Upload all
+			</button>
+			<button
+				type="button"
+				class="btn btn-warning btn-s"
+				(click)="uploader.cancelAll()"
+				[disabled]="!uploader.isUploading"
+			>
+				<span class="fa fa-ban"></span> Cancel all
+			</button>
+			<button
+				type="button"
+				class="btn btn-danger btn-s"
+				(click)="uploader.clearQueue()"
+				[disabled]="!uploader.queue.length"
+			>
+				<span class="fa fa-trash"></span> Remove all
+			</button>
+		</div>
+	</div>
+</div>
