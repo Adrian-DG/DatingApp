@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using API.Extensions;
 using API.Services;
 using API.Entities;
+using API.Data;
 
 namespace API.Controllers
 {
@@ -19,14 +20,16 @@ namespace API.Controllers
     [Authorize]
     public class UsersController : BaseController
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository _userRepository; 
         private readonly IMapper _mapper;
         private readonly IPhotoService _photoService;
-        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService)
+        private readonly DataContext _context;
+        public UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService, DataContext context)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _photoService = photoService;
+            _context = context;
         }
 
         [HttpGet]
@@ -57,21 +60,20 @@ namespace API.Controllers
 
 
         [HttpPost("add-photo")]
-        public async Task<ActionResult<PhotoDTO>> AddPhoto(IFormFile file) 
+        public async Task<ActionResult<PhotoDTO>> AddPhoto([FromForm] IFormFile file) 
         {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             var result = await _photoService.AddPhotoAsync(file);
 
             if(result.Error != null) return BadRequest(result.Error.Message);
 
-            Photo photo = new Photo 
-            {
-                Url = result.SecureUrl.AbsoluteUri,
-                PublicId = result.PublicId,
-                IsMain = (user.Photos.Count == 0) ? true : false
-            };
-
-            user.Photos.Add(photo);
+            var photo = new Photo();
+            photo.Url = result.SecureUrl.AbsoluteUri;
+            photo.PublicId = result.PublicId;
+            photo.AppUser = user;
+            photo.AppUserId = user.Id;  
+                     
+            _context.Photos.Add(photo);
 
             return await _userRepository.SaveAllAsync() 
                    ? _mapper.Map<PhotoDTO>(photo)
