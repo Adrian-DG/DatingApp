@@ -60,16 +60,11 @@ namespace API.Controllers
 
 
         [HttpPost("add-photo")]
-<<<<<<< HEAD
         public async Task<ActionResult<PhotoDTO>> AddPhoto([FromForm] IFormFile file) 
-=======
-        public async Task<ActionResult<PhotoDTO>> AddPhoto(IFormFile file)
->>>>>>> 460b36f73cfed30f839655f2face7259ec0a268b
         {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             var result = await _photoService.AddPhotoAsync(file);
 
-<<<<<<< HEAD
             if(result.Error != null) return BadRequest(result.Error.Message);
 
             var photo = new Photo();
@@ -83,26 +78,6 @@ namespace API.Controllers
             return await _userRepository.SaveAllAsync() 
                    ? CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDTO>(photo))
                    : BadRequest("Problem adding photo");        
-=======
-            if (result.Error == null)
-            {
-                     Photo photo = new Photo();
-
-                    photo.Url = result.SecureUrl.AbsoluteUri;
-                    photo.PublicId = result.PublicId;
-                   
-                   if(user.Photos.Count == 0) {
-                       photo.IsMain = true;
-                   }
-                
-
-                user.Photos.Add(photo);
-
-                return await _userRepository.SaveAllAsync() ? _mapper.Map<PhotoDTO>(photo) : BadRequest("Problems uploading photo");
-            }
-
-            return BadRequest(result.Error.Message);
->>>>>>> 460b36f73cfed30f839655f2face7259ec0a268b
 
         }
 
