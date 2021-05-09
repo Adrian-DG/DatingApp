@@ -13,6 +13,7 @@ using API.Extensions;
 using API.Services;
 using API.Entities;
 using API.Data;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -79,6 +80,33 @@ namespace API.Controllers
                    ? CreatedAtRoute("GetUser", new { username = user.UserName }, _mapper.Map<PhotoDTO>(photo))
                    : BadRequest("Problem adding photo");        
 
+        }
+
+        [HttpPut("set-main-photo/{photoId}")]
+        public async Task<ActionResult> SetMainPhoto(int photoId)
+        {
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            var userPhotos = await _context.Photos.Where(x => x.AppUserId == user.Id).ToListAsync();
+
+            var photo = userPhotos.FirstOrDefault(x => x.Id == photoId);
+
+            if(photo.IsMain) return BadRequest("This photo is already your main picture");
+
+            var currentMain = userPhotos.FirstOrDefault(x => x.IsMain);
+            currentMain.IsMain = false;
+            photo.IsMain = true;
+            
+            return await _userRepository.SaveAllAsync() ? NoContent() : BadRequest("Something went wrong");
+            
+        }
+
+        [HttpDelete("delete-photo/{photoId}")]
+        public async Task<ActionResult> DeletePhoto(int photoId) 
+        {
+            var photo = _context.Photos.FirstOrDefault(x => x.Id == photoId);
+            if(photo == null) return BadRequest(); 
+             _context.Photos.Remove(photo);
+            return await _userRepository.SaveAllAsync() ? NoContent() : BadRequest("Something went wrong on server");
         }
 
 

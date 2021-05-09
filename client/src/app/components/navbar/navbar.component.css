@@ -1,3 +1,10 @@
+.profile-img {
+	border: none;
+	border-radius: 0.5em;
+	height: 2em;
+	width: 2em;
+}
+
 .form-control,
 .btn {
 	margin-left: 0.5em;
