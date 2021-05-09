@@ -7,6 +7,7 @@ import { IUpdateMember } from 'src/app/interfaces/iupdate-member';
 import { ToastrService } from 'ngx-toastr';
 import { map } from 'rxjs/operators';
 import { AccountService } from '../account/account.service';
+import { IUser } from 'src/app/interfaces/iuser';
 
 /*
 const httpOptions = {
@@ -67,6 +68,14 @@ export class MemberService {
 			.subscribe(() => this.updateMembersArray());
 	}
 
+	updateMainPhoto(photoId: number) {
+		return this.$http.put(`${this.baseUrl}/set-main-photo/${photoId}`, {});
+	}
+
+	deletePhoto(photoId: number) {
+		return this.$http.delete(`${this.baseUrl}/delete-photo/${photoId}`);
+	}
+
 	private updateMembersArray(): void {
 		const username = localStorage.getItem('username');
 		const member = this.members.find((x) => x.username === username);
@@ -74,7 +83,7 @@ export class MemberService {
 		if (member) index = this.members.indexOf(member);
 
 		this.$http
-			.get<IMember>(`${this.baseUrl}/${username}`)
+			.get<IMember>(`${this.baseUrl}`)
 			.subscribe((data) => (this.members[index] = data));
 	}
 }

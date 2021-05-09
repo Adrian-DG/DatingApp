@@ -1,14 +1,26 @@
 <div class="row">
-	<div class="col-md-2" *ngFor="let photo of photos">
+	<div class="col-md-2" *ngFor="let photo of member.photos">
 		<img [src]="photo.url" [alt]="photo.url" class="img-thumbnail" />
 		<div class="row p-1">
 			<div class="col-6">
-				<button class="btn btn-block btn-outline-dark btn-sm">
+				<button
+					[disabled]="photo.isMain"
+					class="btn btn-sm"
+					[ngClass]="
+						photo.isMain
+							? 'btn-success active'
+							: 'btn-outline-success'
+					"
+					(click)="setToMainPhoto(photo)"
+				>
 					<i class="fa fa-star"></i>
 				</button>
 			</div>
 			<div class="col-6">
-				<button class="btn btn-block btn-danger btn-sm">
+				<button
+					class="btn btn-block btn-danger btn-sm"
+					(click)="deletePhoto(photo)"
+				>
 					<i class="fa fa-trash"></i>
 				</button>
 			</div>
